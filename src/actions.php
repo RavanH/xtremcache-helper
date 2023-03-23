@@ -1,6 +1,6 @@
 <?php
-/** 
-* @package XtremCache Helper 
+/**
+* @package XtremCache Helper
 */
 
 namespace XtremCache;
@@ -11,7 +11,7 @@ class Actions {
 	 * Admin post callback to call the purge by URL.
 	 *
 	 * @since 0.1
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_url() {
@@ -22,6 +22,27 @@ class Actions {
 		}
 
 		$url = \esc_url( $referer );
+
+		// If referer is post /edit.php?post=XX, find post URL and override $url.
+		$pos = strpos( $url, 'post.php?post=' );
+		if ( $pos ) {
+			$id = (int) strtok( substr( $url, (int) $pos + 14 ), '&' );
+			if ( $id ) {
+				$link = \get_permalink( $id );
+				$url = ! is_wp_error( $link ) ? $link : $url;
+			}
+		}
+
+		// If referer is /term.php?taxonomy=xxxx&tag_ID=XX, find archive URL and override $url.
+		$pos = strpos( $url, 'term.php?taxonomy=' );
+		if ( $pos ) {
+			$id = (int) strtok( substr( $url, (int) strpos( $url, 'tag_ID=' ) + 7 ), '&' );
+			if ( $id ) {
+				$link = \get_term_link( $id );
+				error_log( print_r( $link, true ) );
+				$url = ! is_wp_error( $link ) ? $link : $url;
+			}
+		}
 
 		// Purge.
 		$response_code = Cache::purge_url( $url );
@@ -42,7 +63,7 @@ class Actions {
 	 * Admin post callback to purge front page.
 	 *
 	 * @since 0.6
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_home() {
@@ -88,7 +109,7 @@ class Actions {
 	 * Admin post callback to purge media files.
 	 *
 	 * @since 0.2
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_media() {
@@ -119,7 +140,7 @@ class Actions {
 	 * Admin post callback to purge theme files.
 	 *
 	 * @since 0.6
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_theme() {
@@ -164,7 +185,7 @@ class Actions {
 	 * Admin post callback to purge plugin files.
 	 *
 	 * @since 0.6
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_plugins() {
@@ -193,7 +214,7 @@ class Actions {
 	 * Admin post callback to purge .js and .css files.
 	 *
 	 * @since 0.2
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_js_css() {
@@ -220,7 +241,7 @@ class Actions {
 	 * Admin post callback to purge everything.
 	 *
 	 * @since 0.1
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function admin_purge_all() {
@@ -247,17 +268,17 @@ class Actions {
 	 * Callback to purge all on admin actions, asynchonously.
 	 *
 	 * @since 0.4
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function async_purge_all() {
 		// Prepare admin message.
 		\set_transient( 'xtremcache_admin_notice_' . \get_current_user_id(), __( 'XtremCache purge initiated in the background.', 'xtremcache-helper' ), MINUTE_IN_SECONDS );
 
-		// Purge.
+		// Purge async. TODO make this a WP Cron job.
 		Cache::purge_regex( '.*', array(
 			'blocking'   => false
-		) ); // TODO make this a WP Cron job.
+		) );
 
 		return;
 	}
@@ -266,7 +287,7 @@ class Actions {
 	 * Callback to purge on post transition, asynchonously.
 	 *
 	 * @since 0.4
-	 *  
+	 *
 	 * @return void
 	 */
 	public static function async_purge_post( $post_ID ) {
@@ -282,10 +303,10 @@ class Actions {
 		\set_transient( 'xtremcache_admin_notice_' . \get_current_user_id(), __( 'XtremCache purge initiated in the background.', 'xtremcache-helper' ), MINUTE_IN_SECONDS );
 
 		if ( in_array( $post_type, array( 'wp_template', 'wp_template_part', 'wp_navigation' ) ) ) {
-			// Purge async.
+			// Purge async. TODO make this a WP Cron job.
 			Cache::purge_regex( '.*', array(
 				'blocking'   => false
-			) ); // TODO make this a WP Cron job.
+			) );
 		} else {
 			$urls = array();
 			$home = \home_url();
@@ -300,12 +321,16 @@ class Actions {
 			// Add post URL.
 			$urls[] = \get_permalink( $post_ID );
 
-			// Purge async.
+			// Purge async. TODO make this a WP Cron job.
 			foreach ( $urls as $url ) {
 				Cache::purge_url( $url, array(
 					'blocking'   => false
-				) ); // TODO make this a WP Cron job.
+				) );
 			}
+			// Purge sitemaps async.
+			/*Cache::purge_regex( '.*\.xml$', array(
+				'blocking'   => false
+			) );*/
 		}
 
 		return;

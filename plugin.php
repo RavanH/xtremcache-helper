@@ -1,17 +1,17 @@
 <?php
-/** 
-* @package XtremCache Helper 
+/**
+* @package XtremCache Helper
 */
 
-/* 
+/*
 Plugin Name: XtremCache Helper
-Plugin URI: https://status301.net/ 
+Plugin URI: https://status301.net/
 Description: Helper for o2switch XtremCache. Provides a cache purge admin menu and automatic purging.
 Version: 0.6
-Author: RavanH 
-Author URI: https://status301.net/ 
-License: GPLv2 or later 
-Text Domain: xtremcache-helper 
+Author: RavanH
+Author URI: https://status301.net/
+License: GPLv2 or later
+Text Domain: xtremcache-helper
 */
 
 defined( 'WPINC' ) || die;
@@ -20,7 +20,7 @@ defined( 'WPINC' ) || die;
  * Load the i18n textdomain.
  *
  * @since 0.1
- * 
+ *
  * @return void
  */
 add_action( 'init', function() {
@@ -31,7 +31,7 @@ add_action( 'init', function() {
  * Catch admin notices.
  *
  * @since 0.5
- * 
+ *
  * @return void
  */
 add_action( 'admin_notices', array( 'XtremCache\\Admin', 'admin_notices' ) );
@@ -78,13 +78,20 @@ add_action( 'update_option_tag_base',                               array( 'Xtre
 add_action( 'update_option_theme_mods_'.get_option( 'stylesheet' ), array( 'XtremCache\\Actions', 'async_purge_all' ) );
 add_action( 'wp_update_nav_menu',                                   array( 'XtremCache\\Actions', 'async_purge_all' ) );
 add_action( 'upgrader_process_complete',                            array( 'XtremCache\\Actions', 'async_purge_all' ) );
-add_action( 'activated_plugin',                                     array( 'XtremCache\\Actions', 'async_purge_all' ) ); 
-add_action( 'deactivated_plugin',                                   array( 'XtremCache\\Actions', 'async_purge_all' ) ); 
+add_action( 'activated_plugin',                                     array( 'XtremCache\\Actions', 'async_purge_all' ) );
+add_action( 'deactivated_plugin',                                   array( 'XtremCache\\Actions', 'async_purge_all' ) );
 add_action( 'save_post',                                            array( 'XtremCache\\Actions', 'async_purge_post' )  ); // could be handled by transition_post_status
 add_action( 'wp_trash_post',                                        array( 'XtremCache\\Actions', 'async_purge_post' )  ); // could be handled by transition_post_status
 add_action( 'delete_post',                                          array( 'XtremCache\\Actions', 'async_purge_post' )  ); // verify if post has "published" status?
 add_action( 'wp_update_comment_count',                              array( 'XtremCache\\Actions', 'async_purge_post' )  );
 //add_action( 'transition_post_status',  array( 'XtremCache\\Actions', 'async_purge_transition' ), 99, 3 ); // used for publishing posts
+
+/**
+ * Exclude pages and global cache expiration.
+ *
+ * @since 0.7
+ */
+add_filter( 'wp_headers', array( 'XtremCache\\Filters', 'cache_control' ) );
 
 /**
  * Autoload for our hooks.
@@ -116,7 +123,7 @@ spl_autoload_register( function( $class ) {
  * Add the default settings on plugin activation. Not compatible with Network activation.
  *
  * @since 0.3
- * 
+ *
  * @return void
  */
 function xtremcache_helper_activation() {
@@ -128,7 +135,7 @@ function xtremcache_helper_activation() {
  * Delete setting on uninstall. Not compatible with WP Multisite.
  *
  * @since 0.3
- * 
+ *
  * @return void
  */
 function xtremcache_helper_uninstall() {

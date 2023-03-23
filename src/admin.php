@@ -16,8 +16,14 @@ class Admin {
 	 * @return void
 	 */
 	public static function admin_bar( $wp_admin_bar ) {
+		if ( ! current_user_can( 'publish_posts' ) ) {
+			return;
+		}
 
+		global $pagenow;
 		$menu_id = 'xtremcache';
+
+		// Parent menu entry.
 		$wp_admin_bar->add_menu(
 			array(
 				'id' => $menu_id,
@@ -26,17 +32,17 @@ class Admin {
 			)
 		);
 
-		if ( ! is_admin() ) {
+		// Child entries.
+		if ( ! is_admin() || 'post.php' === $pagenow || 'term.php' === $pagenow ) {
 			$wp_admin_bar->add_menu(
 				array(
 					'parent' => $menu_id,
-					'title'  => __( 'Purge this page', 'xtremcache-helper' ),
+					'title'  => __( 'Purge this', 'xtremcache-helper' ),
 					'id'     => $menu_id . 'purge-url',
 					'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-url' ), 'purge-url' )
 				)
 			);
 		}
-
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $menu_id,
@@ -45,25 +51,22 @@ class Admin {
 				'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-home' ), 'purge-home' )
 			)
 		);
-
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $menu_id,
-				'title'  => __( 'Purge media', 'xtremcache-helper' ),
+				'title'  => __( 'Purge media library', 'xtremcache-helper' ),
 				'id'     => $menu_id . 'purge-media',
 				'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-media' ), 'purge-media' )
 			)
 		);
-
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $menu_id,
-				'title'  => __( 'Purge theme', 'xtremcache-helper' ),
+				'title'  => __( 'Purge theme files', 'xtremcache-helper' ),
 				'id'     => $menu_id . 'purge-theme',
 				'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-theme' ), 'purge-theme' )
 			)
 		);
-
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $menu_id,
@@ -72,7 +75,6 @@ class Admin {
 				'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-js-css' ), 'purge-js-css' )
 			)
 		);
-
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $menu_id,

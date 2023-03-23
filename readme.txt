@@ -1,11 +1,11 @@
 === XtremCache Helper ===
 Contributors: RavanH
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed
-Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, Yandex, Baidu, seo, feed, Polylang, WPML, image sitemap
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XtremCache%Helper
+Tags: cache, Varnish Cache, o2switch, XtremCache, purge
 Requires at least: 4.4
 Requires PHP: 5.6
-Tested up to: 6.1
-Stable tag: 5.3.3
+Tested up to: 6.2
+Stable tag: 0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,15 +78,23 @@ On multisite, the uninstall.php *can* loop through all sites in the network to p
 
 == Upgrade Notice ==
 
-= 0.x =
+= 0.7 =
 
 
 
 == Changelog ==
 
+= 0.7 =
+* set max-age via db option
+* set custom max-age via post meta
+* more purge options: purge this page from post and term edit screen
+* purge menu only for editor+
+* exclude sitemaps
+* basic URL and regex input validation
+
 = 0.6 =
 * more regex purge options: theme, plugins, home/blog pages
-* improved autmatic purging
+* improved automatic purging
 * purging on block theme template modification
 
 = 0.5 =
