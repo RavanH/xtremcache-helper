@@ -1,6 +1,6 @@
 <?php
-/** 
-* @package XtremCache Helper 
+/**
+* @package XtremCache Helper
 */
 
 namespace XtremCache;
@@ -11,7 +11,7 @@ class Admin {
 	 * Add the admin bar Purge Cache menu.
 	 *
 	 * @since 0.1
-	 * 
+	 *
 	 * @param (object) $wp_admin_bar
 	 * @return void
 	 */
@@ -63,7 +63,7 @@ class Admin {
 				'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-theme' ), 'purge-theme' )
 			)
 		);
-		
+
 		$wp_admin_bar->add_menu(
 			array(
 				'parent' => $menu_id,
@@ -80,14 +80,14 @@ class Admin {
 				'id'     => $menu_id . 'purge-all',
 				'href'   => wp_nonce_url( admin_url( 'admin-post.php?action=purge-all' ), 'purge-all' )
 			)
-		);	
+		);
 	}
 
 	/**
 	 * Catch admin notices.
 	 *
 	 * @since 0.5
-	 * 
+	 *
 	 * @return void
 	 */
 	public static function admin_notices() {
@@ -104,8 +104,8 @@ class Admin {
 	/**
 	 * Add a Settings link to the plugin action menu.
 	 *
-	 * @since 0.4
-	 * 
+	 * @since 0.x
+	 *
 	 * @param array  $links
 	 * @return array
 	 */
@@ -118,17 +118,17 @@ class Admin {
 	/**
 	 * Add the admin menu entry and register settings.
 	 *
-	 * @since 0.4
-	 * 
+	 * @since 0.x
+	 *
 	 * @return void
 	 */
 	public static function admin_menu() {
-		add_options_page( 
-			__( 'XtremCache Helper', 'xtremcache-helper' ), 
-			__( 'XtremCache','xtremcache-helper' ), 
-			'manage_options', 
-			'xtremcache_helper', 
-			array( 'XtremCache\\Admin', 'settings_page' ) 
+		add_options_page(
+			__( 'XtremCache Helper', 'xtremcache-helper' ),
+			__( 'XtremCache','xtremcache-helper' ),
+			'manage_options',
+			'xtremcache_helper',
+			array( 'XtremCache\\Admin', 'settings_page' )
 		);
 
 		register_setting( 'xtremcache_settings', 'xtremcache_settings' );
@@ -137,8 +137,8 @@ class Admin {
 	/**
 	 * Render the settings page.
 	 *
-	 * @since 0.4
-	 * 
+	 * @since 0.x
+	 *
 	 * @return void
 	 */
 	public static function settings_page() {
