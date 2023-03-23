@@ -84,6 +84,11 @@ On multisite, the uninstall.php *can* loop through all sites in the network to p
 
 == Changelog ==
 
+TODO Options page
+TODO True async purge with logging
+TODO Cache checker
+TODO Preloader
+
 = 0.7 =
 * set max-age via db option
 * set custom max-age via post meta
