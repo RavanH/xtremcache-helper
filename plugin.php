@@ -91,7 +91,7 @@ add_action( 'wp_update_comment_count',                              array( 'Xtre
  *
  * @since 0.7
  */
-add_filter( 'wp_headers', array( 'XtremCache\\Filters', 'cache_control' ) );
+add_filter( 'wp_headers', array( 'XtremCache\\Filters', 'cache_control' ), 999 );
 
 /**
  * Autoload for our hooks.
