@@ -45,7 +45,7 @@ class Actions {
 		}
 
 		// Purge.
-		$response_code = Cache::purge_url( $url );
+		$response_code = Helper::purge_url( $url );
 
 		if ( 200 === $response_code ) {
 			// Prepare admin message.
@@ -85,7 +85,7 @@ class Actions {
 
 		// Purge.
 		foreach ( $urls as $url ) {
-			$response_codes[] = Cache::purge_url( $url );
+			$response_codes[] = Helper::purge_url( $url );
 		}
 
 		$response_code = $response_codes[0];
@@ -122,7 +122,7 @@ class Actions {
 		$path = \wp_make_link_relative( $upload_dir['baseurl'] );
 
 		// Purge.
-		$response_code = Cache::purge_regex( $path . '/.*' );
+		$response_code = Helper::purge_regex( $path . '/.*' );
 
 		if ( 200 === $response_code ) {
 			// Prepare admin message.
@@ -161,7 +161,7 @@ class Actions {
 
 		// Purge.
 		foreach ( $urls as $url ) {
-			$response_codes[] = Cache::purge_regex( $url . '/.*' );
+			$response_codes[] = Helper::purge_regex( $url . '/.*' );
 		}
 
 		$response_code = $response_codes[0];
@@ -196,7 +196,7 @@ class Actions {
 		$path = \wp_make_link_relative( WP_PLUGIN_URL );
 
 		// Purge.
-		$response_code = Cache::purge_regex( $path . '/.*' );
+		$response_code = Helper::purge_regex( $path . '/.*' );
 
 		if ( 200 === $response_code ) {
 			// Prepare admin message.
@@ -223,7 +223,7 @@ class Actions {
 		}
 
 		// Purge.
-		$response_code = Cache::purge_regex( '.*\.[j|cs]s' );
+		$response_code = Helper::purge_regex( '.*\.[j|cs]s' );
 
 		if ( 200 === $response_code ) {
 			// Prepare admin message.
@@ -250,7 +250,7 @@ class Actions {
 		}
 
 		// Purge.
-		$response_code = Cache::purge_regex( '.*' );
+		$response_code = Helper::purge_regex( '.*' );
 
 		if ( 200 === $response_code ) {
 			// Prepare admin message.
@@ -276,7 +276,7 @@ class Actions {
 		\set_transient( 'xtremcache_admin_notice_' . \get_current_user_id(), __( 'XtremCache purge initiated in the background.', 'xtremcache-helper' ), MINUTE_IN_SECONDS );
 
 		// Purge async. TODO make this a WP Cron job.
-		Cache::purge_regex( '.*', array(
+		Helper::purge_regex( '.*', array(
 			'blocking'   => false
 		) );
 
@@ -304,7 +304,7 @@ class Actions {
 
 		if ( in_array( $post_type, array( 'wp_template', 'wp_template_part', 'wp_navigation' ) ) ) {
 			// Purge async. TODO make this a WP Cron job.
-			Cache::purge_regex( '.*', array(
+			Helper::purge_regex( '.*', array(
 				'blocking'   => false
 			) );
 		} else {
@@ -323,12 +323,12 @@ class Actions {
 
 			// Purge async. TODO make this a WP Cron job.
 			foreach ( $urls as $url ) {
-				Cache::purge_url( $url, array(
+				Helper::purge_url( $url, array(
 					'blocking'   => false
 				) );
 			}
 			// Purge sitemaps async.
-			/*Cache::purge_regex( '.*\.xml$', array(
+			/*Helper::purge_regex( '.*\.xml$', array(
 				'blocking'   => false
 			) );*/
 		}

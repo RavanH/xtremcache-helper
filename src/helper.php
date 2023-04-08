@@ -5,7 +5,7 @@
 
 namespace XtremCache;
 
-class Cache {
+class Helper {
 
 	/**
 	 * Actually purge with remote request.
